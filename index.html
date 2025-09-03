@@ -3,144 +3,86 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Millenia & Fasya - Wedding Invitation</title>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <title>Millenia & Fasya Wedding Invitation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&family=Sacramento&display=swap" rel="stylesheet">
   <style>
-    body, html {
+    body {
       margin: 0;
-      padding: 0;
-      height: 100%;
       font-family: 'Quicksand', sans-serif;
+      background: url('https://imgur.com/10l2EGB.jpg') no-repeat center center/cover;
+      height: 100vh;
       overflow: hidden;
-      background: #000;
-      color: white;
     }
-    .section {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+    .container {
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      transition: opacity 1s ease;
+      align-items: center;
+      text-align: center;
+      height: 100vh;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 20px;
     }
-    .hidden {
-      opacity: 0;
-      pointer-events: none;
+    .names {
+      font-family: 'Sacramento', cursive;
+      font-size: 3rem;
+      margin-bottom: 10px;
+      color: #333;
     }
-    .background {
-      background: url("https://imgur.com/10l2EGB.jpg") center/cover no-repeat;
-      position: absolute;
-      width: 100%; height: 100%;
-      z-index: -2;
+    .invitee {
+      font-size: 1.2rem;
+      margin-top: 20px;
+      color: #444;
     }
-    .overlay {
-      background: rgba(0,0,0,0.6);
-      position: absolute;
-      width: 100%; height: 100%;
-      z-index: -1;
-    }
-    .couple-names {
-      font-size: 2rem;
-      font-family: 'Java Soul', cursive;
-      margin-bottom: 1rem;
-    }
-    .open-btn {
-      background: rgba(255,255,255,0.2);
+    .btn {
+      margin-top: 30px;
+      padding: 10px 20px;
+      border-radius: 9999px;
+      background-color: #333;
       color: white;
-      padding: 12px 24px;
-      border-radius: 30px;
-      border: 1px solid white;
+      font-weight: 600;
+      text-decoration: none;
       cursor: pointer;
-      transition: background 0.3s;
-    }
-    .open-btn:hover {
-      background: rgba(255,255,255,0.4);
     }
     iframe {
       width: 100%;
-      height: 100%;
+      height: 100vh;
       border: none;
-    }
-    /* Music button */
-    .music-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      border: none;
-      background: rgba(255,255,255,0.2);
-      color: white;
-      font-size: 1.2rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-      transition: background 0.3s ease, transform 0.3s ease;
-      backdrop-filter: blur(8px);
-      z-index: 9999;
-    }
-    .music-btn:hover {
-      background: rgba(255,255,255,0.3);
-      transform: scale(1.1);
     }
   </style>
 </head>
 <body>
-  <!-- Background -->
-  <div class="background"></div>
-  <div class="overlay"></div>
-
-  <!-- Cover Section -->
-  <div class="section" id="cover">
-    <div class="couple-names">Millenia & Fasya</div>
-    <p>Dengan penuh rasa syukur, kami mengundang Anda untuk hadir dalam hari bahagia kami.</p>
-    <button class="open-btn" id="openBtn">Buka Undangan</button>
+  <!-- Cover -->
+  <div class="container" id="coverPage">
+    <h1 class="names">Millenia & Fasya</h1>
+    <p class="invitee">Kepada Yth. <span id="guestName">Tamu Undangan</span></p>
+    <button id="openInvitationBtn" class="btn">Buka Undangan</button>
   </div>
 
-  <!-- Invitation Section -->
-  <div class="section hidden" id="invitation">
+  <!-- Canva Invitation (hidden by default) -->
+  <div id="invitationPage" style="display:none;">
     <iframe src="https://kesanastudio.my.canva.site/millionstepswithfasya"></iframe>
   </div>
 
-  <!-- Music -->
+  <!-- Background Music -->
   <audio id="bgMusic" loop>
     <source src="song.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
   </audio>
-  <button class="music-btn" id="musicBtn">▶️</button>
 
   <script>
-    // Sections
-    const cover = document.getElementById("cover");
-    const invitation = document.getElementById("invitation");
-    const openBtn = document.getElementById("openBtn");
+    // Ganti nama tamu sesuai query di URL ?to=Nama
+    const urlParams = new URLSearchParams(window.location.search);
+    const guestName = urlParams.get('to');
+    if (guestName) {
+      document.getElementById('guestName').textContent = guestName;
+    }
 
-    openBtn.addEventListener("click", () => {
-      cover.classList.add("hidden");
-      setTimeout(() => {
-        invitation.classList.remove("hidden");
-      }, 800);
-    });
-
-    // Music Controls
-    const music = document.getElementById("bgMusic");
-    const musicBtn = document.getElementById("musicBtn");
-    let isPlaying = false;
-
-    musicBtn.addEventListener("click", function() {
-      if (isPlaying) {
-        music.pause();
-        musicBtn.textContent = "▶️";
-      } else {
-        music.play();
-        musicBtn.textContent = "⏸️";
-      }
-      isPlaying = !isPlaying;
+    // Tombol buka undangan
+    document.getElementById('openInvitationBtn').addEventListener('click', function() {
+      document.getElementById('coverPage').style.display = 'none';
+      document.getElementById('invitationPage').style.display = 'block';
+      document.getElementById('bgMusic').play();
     });
   </script>
 </body>
